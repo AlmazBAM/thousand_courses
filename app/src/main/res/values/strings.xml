@@ -4,4 +4,8 @@
     <string name="email_placeholder">example@google.com</string>
     <string name="password">Пароль</string>
     <string name="password_placeholder">Введите пароль</string>
+    <string name="enter">Вход</string>
+    <string name="no_account">"Нету аккаунта? "</string>
+    <string name="registration">Регистрация</string>
+    <string name="forget_pass">Забыл пароль</string>
 </resources>
