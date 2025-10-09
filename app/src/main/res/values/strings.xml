@@ -8,4 +8,8 @@
     <string name="no_account">"Нету аккаунта? "</string>
     <string name="registration">Регистрация</string>
     <string name="forget_pass">Забыл пароль</string>
+
+    <string name="home">Главная</string>
+    <string name="bookmark">Избранное</string>
+    <string name="person">Аккаунт</string>
 </resources>
