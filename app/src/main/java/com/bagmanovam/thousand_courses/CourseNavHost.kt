@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.bagmanovam.thousand_courses.presentation.login.LoginScreen
+import com.bagmanovam.thousand_courses.presentation.login.LoginViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
@@ -15,7 +18,18 @@ fun CourseNavHost(
         startDestination = Login
     ) {
         composable<Login> {
-
+            val loginViewModel: LoginViewModel = koinViewModel()
+            val emailState = loginViewModel.emailState
+            val isValid = loginViewModel.isValid
+            val passwordState = loginViewModel.passwordState
+            LoginScreen(
+                onLoginClick = {
+                    navHostController.navigate(Home)
+                },
+                emailState = emailState,
+                passwordState = passwordState,
+                isValid = isValid.value
+            )
         }
 
         composable<Home> {
