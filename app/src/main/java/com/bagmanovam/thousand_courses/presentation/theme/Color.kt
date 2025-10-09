@@ -7,23 +7,17 @@ val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 
 val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF1E1E1E)
 
-val Yellow100 = Color(0xFFFDF2E1)
-val Yellow200 = Color(0xFFFCE5C3)
-val Blue100 = Color(0xFFE3EBF2)
-val Blue200 = Color(0xFFC8D8E5)
-val Green = Color(0xFFD1EAD1)
-val Purple = Color(0xFFDACEE6)
+val Blue = Color(0xFF2683ED)
+val Green = Color(0xFF12B956)
+val Orange = Color(0xFFF95D00)
 
-val Grey100 = Color(0xFFF9F9F9)
-val Grey200 = Color(0xFF868484)
-val Grey300 = Color(0xFF3D3B3B)
+val Grey100 = Color(0xFFF2F2F3)
+val Grey200 = Color(0xFF4D555E)
+val Grey300 = Color(0xFF32333A)
 
 val Brown = Color(0xFF703410)
-
-val PinnedNotesColors = listOf(Yellow200, Purple, Blue200)
-val OtherNotesColors = listOf(Yellow100, Green, Blue100)
-
 
 val baseError = Color(0xFFCE3A54)
 val darkError = Color(0xFF5A1623)

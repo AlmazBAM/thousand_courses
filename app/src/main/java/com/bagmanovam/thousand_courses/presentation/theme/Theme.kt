@@ -20,7 +20,7 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Brown,
     onPrimary = White,
-    background = White,
+    background = Black,
     onBackground = Grey300,
     surface = Grey100,
     onSurface = Grey300,
@@ -32,7 +32,7 @@ fun Thousand_coursesTheme(
 //    darkTheme: Boolean = isSystemInDarkTheme(),
     darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
