@@ -1,6 +1,8 @@
 package com.bagmanovam.thousand_courses
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,7 +22,7 @@ fun CourseNavHost(
         composable<Login> {
             val loginViewModel: LoginViewModel = koinViewModel()
             val emailState = loginViewModel.emailState
-            val isValid = loginViewModel.isValid
+            val isValid by remember { loginViewModel.isValid }
             val passwordState = loginViewModel.passwordState
             LoginScreen(
                 onLoginClick = {
@@ -28,7 +30,7 @@ fun CourseNavHost(
                 },
                 emailState = emailState,
                 passwordState = passwordState,
-                isValid = isValid.value
+                isValid = isValid
             )
         }
 
