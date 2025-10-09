@@ -1,7 +1,6 @@
 package com.bagmanovam.thousand_courses.presentation.login
 
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -36,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.bagmanovam.thousand_courses.R
 import com.bagmanovam.thousand_courses.core.presentation.components.LoginItem
 import com.bagmanovam.thousand_courses.other.LoginEnums
@@ -43,7 +43,6 @@ import com.bagmanovam.thousand_courses.presentation.theme.Blue
 import com.bagmanovam.thousand_courses.presentation.theme.Green
 import com.bagmanovam.thousand_courses.presentation.theme.Orange
 import com.bagmanovam.thousand_courses.presentation.theme.Thousand_coursesTheme
-import androidx.core.net.toUri
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +54,8 @@ fun LoginScreen(
     passwordState: TextFieldState,
     isValid: Boolean,
 ) {
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     Scaffold { innerPadding ->
         Column(
             modifier = modifier
@@ -83,7 +83,7 @@ fun LoginScreen(
                 placeholder = LoginEnums.EMAIL_PLACEHOLDER,
                 state = emailState,
                 isValid = isValid,
-                keyBoardOptions  = KeyboardOptions.Default.copy(
+                keyBoardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Done,
                     capitalization = KeyboardCapitalization.Words,
@@ -97,7 +97,7 @@ fun LoginScreen(
                 label = LoginEnums.PASSWORD,
                 placeholder = LoginEnums.PASSWORD_PLACEHOLDER,
                 state = passwordState,
-                keyBoardOptions  = KeyboardOptions.Default.copy(
+                keyBoardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done,
                     capitalization = KeyboardCapitalization.Words,
@@ -110,8 +110,11 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .padding(top = 24.dp, bottom = 16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Green
+                    containerColor = Green,
+                    disabledContainerColor = Green.copy(alpha = 0.2f),
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)
                 ),
+                enabled = isValid,
                 onClick = onLoginClick
             ) {
                 Text(
