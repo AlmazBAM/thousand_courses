@@ -6,6 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.bagmanovam.thousand_courses.presentation.home.HomeScreen
+import com.bagmanovam.thousand_courses.presentation.home.HomeViewModel
 import com.bagmanovam.thousand_courses.presentation.login.LoginScreen
 import com.bagmanovam.thousand_courses.presentation.login.LoginViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -17,7 +19,7 @@ fun CourseNavHost(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Login
+        startDestination = Home
     ) {
         composable<Login> {
             val loginViewModel: LoginViewModel = koinViewModel()
@@ -35,7 +37,8 @@ fun CourseNavHost(
         }
 
         composable<Home> {
-
+            val homeViewModel = koinViewModel<HomeViewModel>()
+            HomeScreen()
         }
 
         composable<Favourite> {
