@@ -124,6 +124,7 @@ fun SearchBar(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         TextField(
+            modifier = Modifier.weight(1f),
             value = text,
             onValueChange = onValueChanged,
             placeholder = {
