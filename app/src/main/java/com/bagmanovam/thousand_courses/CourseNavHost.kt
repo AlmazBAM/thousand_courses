@@ -3,13 +3,15 @@ package com.bagmanovam.thousand_courses
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bagmanovam.thousand_courses.presentation.home.HomeScreen
+import com.bagmanovam.thousand_courses.presentation.MainScreen
 import com.bagmanovam.thousand_courses.presentation.home.HomeViewModel
 import com.bagmanovam.thousand_courses.presentation.login.LoginScreen
 import com.bagmanovam.thousand_courses.presentation.login.LoginViewModel
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -38,11 +40,16 @@ fun CourseNavHost(
 
         composable<Home> {
             val homeViewModel = koinViewModel<HomeViewModel>()
-            HomeScreen()
-        }
+            val isRefreshing by homeViewModel.isRefreshing.collectAsStateWithLifecycle()
+            val courseList by homeViewModel.courseList.collectAsStateWithLifecycle()
+            val refreshState = rememberSwipeRefreshState(isRefreshing)
 
-        composable<Favourite> {
-
+            MainScreen(
+                courseList = courseList,
+                refreshState = refreshState,
+                onRefresh = { homeViewModel.getCourseList() },
+                onSortedClick = { homeViewModel.getCourseList() }
+            )
         }
     }
 
