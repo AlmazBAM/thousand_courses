@@ -2,6 +2,7 @@ package com.bagmanovam.thousand_courses
 
 import android.app.Application
 import com.bagmanovam.thousand_courses.di.appModule
+import com.bagmanovam.thousand_courses.di.dataModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -13,7 +14,7 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             androidLogger()
-            modules(appModule)
+            modules(appModule, dataModule)
         }
     }
 }
