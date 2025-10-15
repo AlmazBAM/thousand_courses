@@ -3,7 +3,6 @@ package com.bagmanovam.thousand_courses.presentation.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bagmanovam.thousand_courses.domain.model.Course
 import com.bagmanovam.thousand_courses.domain.model.Courses
 import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +26,8 @@ class HomeViewModel(
             _isRefreshing.value = false
         }
     }
+
+
 
     companion object {
         private val TAG = HomeViewModel::class.java.simpleName

@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.bagmanovam.thousand_courses.R
-import com.bagmanovam.thousand_courses.core.presentation.components.LoginItem
+import com.bagmanovam.thousand_courses.core.presentation.LoginItem
 import com.bagmanovam.thousand_courses.other.LoginEnums
 import com.bagmanovam.thousand_courses.presentation.theme.Blue
 import com.bagmanovam.thousand_courses.presentation.theme.Green

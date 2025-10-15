@@ -12,4 +12,6 @@
     <string name="home">Главная</string>
     <string name="bookmark">Избранное</string>
     <string name="person">Аккаунт</string>
+    <string name="by_added_date">По дате добавления</string>
+    <string name="additional">Подробнее</string>
 </resources>

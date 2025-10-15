@@ -1,97 +1,109 @@
 package com.bagmanovam.thousand_courses.presentation.home
 
-import android.util.Log
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bagmanovam.thousand_courses.core.presentation.components.SearchBar
-import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToIcon
-import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToString
+import androidx.compose.ui.unit.sp
+import com.bagmanovam.thousand_courses.R
+import com.bagmanovam.thousand_courses.core.presentation.CourseCard
+import com.bagmanovam.thousand_courses.core.presentation.SearchBar
+import com.bagmanovam.thousand_courses.domain.model.Courses
 import com.bagmanovam.thousand_courses.presentation.theme.Green
-import com.bagmanovam.thousand_courses.presentation.theme.Grey200
 import com.bagmanovam.thousand_courses.presentation.theme.Thousand_coursesTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel(),
+    courseList: Courses,
+    refreshState: SwipeRefreshState,
+    onRefresh: () -> Unit,
+    onSortedClick: () -> Unit,
 ) {
-    var selected by remember { mutableStateOf(Tab.Home) }
-    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-    val refreshState = rememberSwipeRefreshState(isRefreshing)
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.onBackground,
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxSize()
+    ) {
+        SearchBar(
+            modifier = Modifier.padding(bottom = 16.dp),
+            text = "",
+            onValueChanged = {},
+            onFilterClicked = {}
+        )
+
+        SwipeRefresh(
+            modifier = Modifier.weight(1f),
+            state = refreshState,
+            onRefresh = onRefresh
+        ) {
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
             ) {
-                Column {
-                    HorizontalDivider(
-                        thickness = 2.dp, color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Row {
-                        listOf(Tab.Home, Tab.Favourite, Tab.Profile).forEach { item ->
-                            NavItem(
-                                item = item,
-                                selected = selected,
-                                primary = Green,
-                                unselected = Grey200,
-                                onClick = { selected = item }
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Row(
+                            modifier = Modifier.clickable {
+                                onSortedClick()
+                            },
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Text(
+                                text = stringResource(R.string.by_added_date),
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = Green,
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp
+                                )
+                            )
+                            Icon(
+                                painter = painterResource(R.drawable.arrows),
+                                contentDescription = "Sort by date",
+                                tint = Green
                             )
                         }
+
                     }
                 }
-            }
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize()
-        ) {
-            SearchBar(
-                modifier = Modifier,
-                text = "",
-                onValueChanged = {},
-                onFilterClicked = {}
-            )
-            SwipeRefresh(
-                modifier = Modifier.weight(1f),
-                state = refreshState,
-                onRefresh = {
-                    viewModel.getCourseList()
-                }
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                items(courseList.courses) { course ->
+                    CourseCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        course = course
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
                 }
             }
@@ -99,51 +111,15 @@ fun HomeScreen(
     }
 }
 
-@Composable
-private fun RowScope.NavItem(
-    item: Tab,
-    selected: Tab,
-    primary: Color,
-    unselected: Color,
-    onClick: (Tab) -> Unit,
-) {
-    NavigationBarItem(
-        selected = selected == item,
-        onClick = { onClick(item) },
-        icon = {
-            Icon(
-                painter = item.navItemToIcon(),
-                contentDescription = item.description,
-                tint = if (selected == item) Green else MaterialTheme.colorScheme.onPrimary
-            )
-        },
-        label = {
-            Text(
-                text = item.navItemToString(), style = MaterialTheme.typography.labelSmall.copy(
-                    color = if (selected == item) Green else MaterialTheme.colorScheme.onPrimary
-                )
-            )
-        },
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = primary,
-            selectedTextColor = primary,
-            indicatorColor = Color.Transparent, // без плашки под иконкой
-            unselectedIconColor = unselected,
-            unselectedTextColor = unselected
-        )
-    )
-}
-
-enum class Tab(val description: String) {
-    Home("Home page"),
-    Favourite("Favourite page"),
-    Profile("Profile page"),
-}
-
 @Preview
 @Composable
 private fun HomeScreenPreview() {
     Thousand_coursesTheme {
-        HomeScreen()
+        HomeScreen(
+            courseList = Courses(emptyList()),
+            refreshState = rememberSwipeRefreshState(false),
+            onRefresh = {},
+            onSortedClick = {}
+        )
     }
 }
