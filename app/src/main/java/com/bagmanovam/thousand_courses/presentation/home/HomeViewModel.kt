@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.RequestCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SetFavouriteStatusUseCase
+import com.bagmanovam.thousand_courses.domain.useCases.SortByPublishDateUseCase
 import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
 import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
 import kotlinx.coroutines.delay
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val requestCoursesUseCase: RequestCoursesUseCase,
     private val getCoursesUseCase: GetCoursesUseCase,
+    private val sortByPublishDateUseCase: SortByPublishDateUseCase,
     private val setFavouriteStatusUseCase: SetFavouriteStatusUseCase,
 ) : ViewModel() {
 
@@ -58,7 +60,9 @@ class HomeViewModel(
             }
 
             HomeEvent.OnSorted -> {
-
+                viewModelScope.launch {
+                    sortByPublishDateUseCase()
+                }
             }
 
             is HomeEvent.OnBookMarkClick -> {

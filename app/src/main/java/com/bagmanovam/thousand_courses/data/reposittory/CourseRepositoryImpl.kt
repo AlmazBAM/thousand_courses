@@ -58,6 +58,12 @@ class CourseRepositoryImpl(
         }
     }
 
+    override suspend fun sortByPublishDate() {
+        _courses.value = CoursesDto(
+            _courses.value.courses.sortedByDescending { it.publishDate }
+        )
+    }
+
     companion object {
         private val TAG = CourseRepositoryImpl::class.java.simpleName
     }

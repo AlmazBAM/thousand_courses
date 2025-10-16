@@ -7,6 +7,7 @@ import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.GetFavouriteCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.RequestCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SetFavouriteStatusUseCase
+import com.bagmanovam.thousand_courses.domain.useCases.SortByPublishDateUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -19,6 +20,7 @@ val dataModule = module {
     singleOf(::SetFavouriteStatusUseCase)
     singleOf(::GetFavouriteCoursesUseCase)
     singleOf(::RequestCoursesUseCase)
+    singleOf(::SortByPublishDateUseCase)
 
     single {
         Retrofit.Builder()
