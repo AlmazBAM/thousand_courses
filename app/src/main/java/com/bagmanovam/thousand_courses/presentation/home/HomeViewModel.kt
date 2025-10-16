@@ -29,13 +29,13 @@ class HomeViewModel(
     val uiState = _uiState
         .onStart {
             viewModelScope.launch {
-                _uiState.update { state ->
-                    state.copy(
-                        isRefreshing = true
-                    )
-                }
-                delay(2000) // иммитация длительной операции
                 getCoursesUseCase().collect { list ->
+                    _uiState.update { state ->
+                        state.copy(
+                            isRefreshing = true
+                        )
+                    }
+                    delay(2000) // иммитация длительной операции
                     _uiState.update { state ->
                         state.copy(
                             listCourses = list.courses,
