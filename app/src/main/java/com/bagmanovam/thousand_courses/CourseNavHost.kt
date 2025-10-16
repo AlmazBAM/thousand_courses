@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bagmanovam.thousand_courses.presentation.MainScreen
+import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteViewModel
 import com.bagmanovam.thousand_courses.presentation.home.HomeViewModel
 import com.bagmanovam.thousand_courses.presentation.login.LoginScreen
 import com.bagmanovam.thousand_courses.presentation.login.LoginViewModel
@@ -38,13 +39,17 @@ fun CourseNavHost(
         }
 
         composable<Home> {
-            val homeViewModel = koinViewModel<HomeViewModel>()
-            val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
+            val homeViewModel = koinViewModel<HomeViewModel>(viewModelStoreOwner = it)
+            val homeState by homeViewModel.uiState.collectAsStateWithLifecycle()
+
+            val favouriteViewModel = koinViewModel<FavouriteViewModel>(viewModelStoreOwner = it)
+            val favouriteState by favouriteViewModel.uiState.collectAsStateWithLifecycle()
 
             MainScreen(
-                uiState = uiState,
+                homeState = homeState,
+                favouriteState = favouriteState,
                 onHomeActionClick = homeViewModel::onAction,
-                onFavouriteActionClick = homeViewModel::onAction
+                onFavouriteActionClick = favouriteViewModel::onAction
             )
         }
     }

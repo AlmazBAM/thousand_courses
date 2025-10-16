@@ -26,6 +26,8 @@ import com.bagmanovam.thousand_courses.core.presentation.Tab
 import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToIcon
 import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToString
 import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteScreen
+import com.bagmanovam.thousand_courses.presentation.favourite.event.FavouriteEvent
+import com.bagmanovam.thousand_courses.presentation.favourite.state.FavouriteUiState
 import com.bagmanovam.thousand_courses.presentation.home.HomeScreen
 import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
 import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
@@ -37,9 +39,10 @@ import com.bagmanovam.thousand_courses.presentation.theme.Grey200
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    uiState: HomeUiState,
+    homeState: HomeUiState,
+    favouriteState: FavouriteUiState,
     onHomeActionClick: (HomeEvent) -> Unit,
-    onFavouriteActionClick: (HomeEvent) -> Unit
+    onFavouriteActionClick: (FavouriteEvent) -> Unit,
 ) {
     var selected by remember { mutableStateOf(Tab.Home) }
 
@@ -74,13 +77,15 @@ fun MainScreen(
         ) {
             when (selected) {
                 Tab.Home -> HomeScreen(
-                    uiState = uiState,
+                    uiState = homeState,
                     onHomeActionClick = onHomeActionClick
                 )
+
                 Tab.Favourite -> FavouriteScreen(
-                    courseList = uiState.listCourses,
-                    onFavouriteActionClick = { onFavouriteActionClick }
+                    uiState = favouriteState,
+                    onFavouriteActionClick = onFavouriteActionClick
                 )
+
                 Tab.Profile -> ProfileScreen()
             }
         }

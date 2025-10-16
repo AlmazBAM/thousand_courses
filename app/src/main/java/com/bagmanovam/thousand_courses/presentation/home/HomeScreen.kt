@@ -98,7 +98,7 @@ fun HomeScreen(
                     CourseCard(
                         modifier = Modifier.fillMaxWidth(),
                         course = course,
-                        onBookMarkClick = { onHomeActionClick(HomeEvent.OnBookMarkClick(course)) }
+                        onBookMarkClick = { onHomeActionClick(HomeEvent.OnBookMarkClick(course.id)) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
