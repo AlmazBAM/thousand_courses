@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +56,14 @@ fun HomeScreen(
         SearchBar(
             modifier = Modifier.padding(bottom = 16.dp),
             text = "",
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+                capitalization = KeyboardCapitalization.Words,
+                autoCorrectEnabled = true,
+                showKeyboardOnFocus = true,
+                hintLocales = LocaleList(Locale("ru"))
+            ),
             onValueChanged = {},
             onFilterClicked = {}
         )
@@ -79,8 +93,9 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.by_added_date),
-                                style = MaterialTheme.typography.bodySmall.copy(
+                                style = MaterialTheme.typography.labelLarge.copy(
                                     color = Green,
+                                    letterSpacing = 0.1.sp,
                                     fontSize = 14.sp,
                                     lineHeight = 20.sp
                                 )

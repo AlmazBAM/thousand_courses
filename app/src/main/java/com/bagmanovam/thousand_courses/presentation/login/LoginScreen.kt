@@ -74,6 +74,7 @@ fun LoginScreen(
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 28.sp,
+                    lineHeight = 36.sp,
                     textAlign = TextAlign.Start
                 )
             )

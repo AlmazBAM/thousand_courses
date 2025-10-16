@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,7 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -129,7 +132,7 @@ fun LoginItem(
 fun CourseCard(
     modifier: Modifier = Modifier,
     course: Course,
-    onBookMarkClick: (Course) -> Unit
+    onBookMarkClick: (Course) -> Unit,
 ) {
     val listImages = listOf(
         R.mipmap.it_course_1,
@@ -142,7 +145,7 @@ fun CourseCard(
         modifier = modifier
             .background(
                 MaterialTheme.colorScheme.onBackground,
-                RoundedCornerShape(24.dp)
+                RoundedCornerShape(18.dp)
             )
     ) {
         Box(
@@ -151,9 +154,9 @@ fun CourseCard(
         ) {
             Image(
                 modifier = Modifier
-                    .heightIn(max = 114.dp)
+                    .heightIn(max = 126.dp)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(24.dp)),
+                    .clip(RoundedCornerShape(18.dp)),
                 painter = rememberAsyncImagePainter(
                     model = listImages.random(),
                     contentScale = ContentScale.FillWidth
@@ -161,15 +164,24 @@ fun CourseCard(
                 contentDescription = "",
                 contentScale = ContentScale.FillWidth
             )
-            IconButton(
-                modifier = Modifier.align(Alignment.TopEnd),
-                onClick = { onBookMarkClick(course) }
+            BlurredContainer(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .size(28.dp),
+                shape = CircleShape,
+                paddingValues = PaddingValues(0.dp)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.bookmark),
-                    tint = if (course.hasLike) Green else White,
-                    contentDescription = "Add to favourite button"
-                )
+                IconButton(
+                    onClick = { onBookMarkClick(course) }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(R.drawable.bookmark),
+                        tint = if (course.hasLike) Green else White,
+                        contentDescription = "Add to favourite button"
+                    )
+                }
             }
             Row(
                 modifier = Modifier
@@ -182,6 +194,7 @@ fun CourseCard(
             ) {
                 BlurredContainer(
                     modifier = Modifier
+                        .width(46.dp)
                         .height(22.dp)
                 ) {
                     Row(
@@ -197,6 +210,8 @@ fun CourseCard(
                             text = course.rate,
                             style = MaterialTheme.typography.bodySmall.copy(
                                 fontSize = 12.sp,
+                                letterSpacing = 0.4.sp,
+                                lineHeight = 14.sp,
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                         )
@@ -205,12 +220,14 @@ fun CourseCard(
 
                 BlurredContainer(
                     modifier = Modifier
-                        .height(22.dp)
+                        .height(22.dp),
                 ) {
                     Text(
                         text = course.startDate.dateToDisplayableString(),
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontSize = 12.sp,
+                            letterSpacing = 0.4.sp,
+                            lineHeight = 14.sp,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     )
@@ -223,12 +240,13 @@ fun CourseCard(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(top = 8.dp, start = 8.dp, end = 8.dp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 text = course.title,
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.labelLarge.copy(
                     fontSize = 16.sp,
+                    letterSpacing = 0.15.sp,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             )
@@ -241,6 +259,7 @@ fun CourseCard(
                 text = course.text,
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontSize = 12.sp,
+                    letterSpacing = 0.4.sp,
                     color = MaterialTheme.colorScheme.surface
                 )
             )
@@ -253,7 +272,7 @@ fun CourseCard(
             ) {
                 Text(
                     text = course.price + " ₽",
-                    style = MaterialTheme.typography.bodyMedium.copy(
+                    style = MaterialTheme.typography.labelLarge.copy(
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 16.sp,
                         lineHeight = 18.sp
@@ -265,7 +284,7 @@ fun CourseCard(
                 ) {
                     Text(
                         text = stringResource(R.string.additional),
-                        style = MaterialTheme.typography.bodySmall.copy(
+                        style = MaterialTheme.typography.labelLarge.copy(
                             color = Green,
                             fontSize = 12.sp,
                             lineHeight = 15.sp
@@ -285,46 +304,43 @@ fun CourseCard(
 @Composable
 fun BlurredContainer(
     modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(12.dp),
+    paddingValues: PaddingValues = PaddingValues(6.dp, 4.dp, 6.dp, 4.dp),
     content: @Composable () -> Unit,
 ) {
     Box(
-        modifier = modifier.clip(RoundedCornerShape(12.dp))
+        modifier = modifier.clip(shape),
+        contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(Grey30)
-                .blur(22.dp)
-                .padding(
-                    start = 6.dp,
-                    top = 4.dp,
-                    end = 6.dp,
-                    bottom = 4.dp
-                )
+                .clip(shape)
+                .blur(32.dp)
+                .padding(paddingValues)
         )
 
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(Grey30)
-                .padding(
-                    start = 6.dp,
-                    top = 4.dp,
-                    end = 6.dp,
-                    bottom = 4.dp
-                ),
+                .clip(shape)
+                .background(brush = Brush.linearGradient(
+                    colors = listOf(
+                        Grey30.copy(alpha = 0.3f),
+                        Grey30.copy(alpha = 0.6f)
+                    )
+                ))
+                .padding(paddingValues),
             contentAlignment = Alignment.Center
         ) {
             content()
         }
     }
-
 }
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
     text: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChanged: (String) -> Unit,
     onFilterClicked: () -> Unit,
 ) {
@@ -346,6 +362,7 @@ fun SearchBar(
                     )
                 )
             },
+            keyboardOptions = keyboardOptions,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.onBackground,
                 unfocusedContainerColor = MaterialTheme.colorScheme.onBackground,

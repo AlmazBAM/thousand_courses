@@ -21,9 +21,3 @@ val Grey30 = Color(0x4D32333A)
 val Brown = Color(0xFF703410)
 
 val baseError = Color(0xFFCE3A54)
-val darkError = Color(0xFF5A1623)
-val lightError = Color(0xFFF7DEE3)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
