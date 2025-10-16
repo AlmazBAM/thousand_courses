@@ -1,32 +1,61 @@
 package com.bagmanovam.thousand_courses.presentation.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bagmanovam.thousand_courses.domain.model.Courses
 import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
+import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
+import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getCoursesUseCase: GetCoursesUseCase
+    private val getCoursesUseCase: GetCoursesUseCase,
 ) : ViewModel() {
 
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing = _isRefreshing.asStateFlow()
-    private val _courseList = MutableStateFlow<Courses>(Courses(emptyList()))
-    val courseList = _courseList.asStateFlow()
 
-    fun getCourseList() {
-        viewModelScope.launch {
-            _isRefreshing.value = true
-            _courseList.value = getCoursesUseCase()
-            Log.i(TAG, "getCourseList: ${_courseList.value.courses.size}")
-            _isRefreshing.value = false
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState = _uiState
+        .onStart {
+
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            HomeUiState()
+        )
+
+    fun onAction(event: HomeEvent) {
+        when (event) {
+            HomeEvent.OnRequest -> {
+                viewModelScope.launch {
+                    _uiState.update { state ->
+                        state.copy(
+                            isRefreshing = true
+                        )
+                    }
+                    val list = getCoursesUseCase().courses
+                    _uiState.update { state ->
+                        state.copy(
+                            listCourses = list,
+                            isRefreshing = false
+                        )
+                    }
+                }
+            }
+
+            HomeEvent.OnSorted -> {
+
+            }
+
+            is HomeEvent.OnBookMarkClick -> {
+
+            }
         }
     }
-
 
 
     companion object {

@@ -129,6 +129,7 @@ fun LoginItem(
 fun CourseCard(
     modifier: Modifier = Modifier,
     course: Course,
+    onBookMarkClick: (Course) -> Unit
 ) {
     val listImages = listOf(
         R.mipmap.it_course_1,
@@ -162,7 +163,7 @@ fun CourseCard(
             )
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
-                onClick = {}
+                onClick = { onBookMarkClick(course) }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.bookmark),

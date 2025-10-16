@@ -1,9 +1,6 @@
 package com.bagmanovam.thousand_courses.presentation.home
 
-import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,22 +26,21 @@ import androidx.compose.ui.unit.sp
 import com.bagmanovam.thousand_courses.R
 import com.bagmanovam.thousand_courses.core.presentation.CourseCard
 import com.bagmanovam.thousand_courses.core.presentation.SearchBar
-import com.bagmanovam.thousand_courses.domain.model.Courses
+import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
+import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
 import com.bagmanovam.thousand_courses.presentation.theme.Green
 import com.bagmanovam.thousand_courses.presentation.theme.Thousand_coursesTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    courseList: Courses,
-    refreshState: SwipeRefreshState,
-    onRefresh: () -> Unit,
-    onSortedClick: () -> Unit,
+    uiState: HomeUiState,
+    onHomeActionClick: (HomeEvent) -> Unit,
 ) {
+    val refreshState = rememberSwipeRefreshState(uiState.isRefreshing)
 
     Column(
         modifier = modifier
@@ -61,7 +57,7 @@ fun HomeScreen(
         SwipeRefresh(
             modifier = Modifier.weight(1f),
             state = refreshState,
-            onRefresh = onRefresh
+            onRefresh = { onHomeActionClick(HomeEvent.OnRequest) }
         ) {
 
             LazyColumn(
@@ -76,7 +72,7 @@ fun HomeScreen(
                     ) {
                         Row(
                             modifier = Modifier.clickable {
-                                onSortedClick()
+                                onHomeActionClick(HomeEvent.OnSorted)
                             },
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.Bottom
@@ -98,10 +94,11 @@ fun HomeScreen(
 
                     }
                 }
-                items(courseList.courses) { course ->
+                items(uiState.listCourses) { course ->
                     CourseCard(
                         modifier = Modifier.fillMaxWidth(),
-                        course = course
+                        course = course,
+                        onBookMarkClick = { onHomeActionClick(HomeEvent.OnBookMarkClick(course)) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -116,10 +113,8 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     Thousand_coursesTheme {
         HomeScreen(
-            courseList = Courses(emptyList()),
-            refreshState = rememberSwipeRefreshState(false),
-            onRefresh = {},
-            onSortedClick = {}
+            uiState = HomeUiState(),
+            onHomeActionClick = {}
         )
     }
 }

@@ -25,22 +25,21 @@ import androidx.compose.ui.unit.dp
 import com.bagmanovam.thousand_courses.core.presentation.Tab
 import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToIcon
 import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToString
-import com.bagmanovam.thousand_courses.domain.model.Courses
 import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteScreen
 import com.bagmanovam.thousand_courses.presentation.home.HomeScreen
+import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
+import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
 import com.bagmanovam.thousand_courses.presentation.profile.ProfileScreen
 import com.bagmanovam.thousand_courses.presentation.theme.Green
 import com.bagmanovam.thousand_courses.presentation.theme.Grey200
-import com.google.accompanist.swiperefresh.SwipeRefreshState
 
 
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    courseList: Courses,
-    refreshState: SwipeRefreshState,
-    onRefresh: () -> Unit,
-    onSortedClick: () -> Unit
+    uiState: HomeUiState,
+    onHomeActionClick: (HomeEvent) -> Unit,
+    onFavouriteActionClick: (HomeEvent) -> Unit
 ) {
     var selected by remember { mutableStateOf(Tab.Home) }
 
@@ -75,12 +74,13 @@ fun MainScreen(
         ) {
             when (selected) {
                 Tab.Home -> HomeScreen(
-                    courseList = courseList,
-                    refreshState = refreshState,
-                    onRefresh = onRefresh,
-                    onSortedClick = onSortedClick
+                    uiState = uiState,
+                    onHomeActionClick = onHomeActionClick
                 )
-                Tab.Favourite -> FavouriteScreen()
+                Tab.Favourite -> FavouriteScreen(
+                    courseList = uiState.listCourses,
+                    onFavouriteActionClick = { onFavouriteActionClick }
+                )
                 Tab.Profile -> ProfileScreen()
             }
         }

@@ -11,7 +11,6 @@ import com.bagmanovam.thousand_courses.presentation.MainScreen
 import com.bagmanovam.thousand_courses.presentation.home.HomeViewModel
 import com.bagmanovam.thousand_courses.presentation.login.LoginScreen
 import com.bagmanovam.thousand_courses.presentation.login.LoginViewModel
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -40,15 +39,12 @@ fun CourseNavHost(
 
         composable<Home> {
             val homeViewModel = koinViewModel<HomeViewModel>()
-            val isRefreshing by homeViewModel.isRefreshing.collectAsStateWithLifecycle()
-            val courseList by homeViewModel.courseList.collectAsStateWithLifecycle()
-            val refreshState = rememberSwipeRefreshState(isRefreshing)
+            val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
             MainScreen(
-                courseList = courseList,
-                refreshState = refreshState,
-                onRefresh = { homeViewModel.getCourseList() },
-                onSortedClick = { homeViewModel.getCourseList() }
+                uiState = uiState,
+                onHomeActionClick = homeViewModel::onAction,
+                onFavouriteActionClick = homeViewModel::onAction
             )
         }
     }
