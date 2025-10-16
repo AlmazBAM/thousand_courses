@@ -59,6 +59,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+
     implementation(libs.bundles.room)
     ksp(libs.room.compiler)
 
