@@ -15,4 +15,6 @@
     <string name="by_added_date">По дате добавления</string>
     <string name="additional">Подробнее</string>
     <string name="favourite">Избранное</string>
+    <string name="search_courses">Search courses...</string>
+    <string name="as_soon_as_possible">Скоро появится</string>
 </resources>

@@ -27,7 +27,6 @@ class CourseRepositoryImpl(
                     _courses.value = CoursesDto(emptyList())
                 }
             } else {
-                Log.e("Retrofit", "Ошибка ${response.code()}")
                 _courses.value = CoursesDto(emptyList())
             }
         } catch (_: Exception) {
@@ -36,7 +35,6 @@ class CourseRepositoryImpl(
     }
 
     override suspend fun getCourses(): Flow<CoursesDto> {
-        Log.e(TAG, "getCourses: ${_courses.value.courses.isEmpty()}")
         if (_courses.value.courses.isEmpty()) {
             requestCourses()
         }
@@ -54,7 +52,7 @@ class CourseRepositoryImpl(
             }
         )
         _courses.value.courses.forEach {
-            Log.i(TAG, "Course: ${it.id} ${it.hasLike}")
+            Log.d(TAG, "Course: ${it.id} ${it.hasLike}")
         }
     }
 

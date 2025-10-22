@@ -322,12 +322,14 @@ fun BlurredContainer(
         Box(
             modifier = Modifier
                 .clip(shape)
-                .background(brush = Brush.linearGradient(
-                    colors = listOf(
-                        Grey30.copy(alpha = 0.3f),
-                        Grey30.copy(alpha = 0.6f)
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Grey30.copy(alpha = 0.3f),
+                            Grey30.copy(alpha = 0.6f)
+                        )
                     )
-                ))
+                )
                 .padding(paddingValues),
             contentAlignment = Alignment.Center
         ) {
@@ -354,7 +356,7 @@ fun SearchBar(
             onValueChange = onValueChanged,
             placeholder = {
                 Text(
-                    text = "Search courses...",
+                    text = stringResource(R.string.search_courses),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
