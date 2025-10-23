@@ -1,14 +1,9 @@
 package com.bagmanovam.thousand_courses.domain.useCases
 
-import com.bagmanovam.thousand_courses.data.mapper.toDomains
-import com.bagmanovam.thousand_courses.domain.reposittory.CourseRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
+import com.bagmanovam.thousand_courses.domain.model.Course
+import kotlinx.coroutines.flow.Flow
 
-class GetCoursesUseCase(private val repository: CourseRepository) {
+interface GetCoursesUseCase {
 
-    suspend operator fun invoke() = withContext(Dispatchers.IO) {
-        repository.getCourses().map { it.toDomains() }
-    }
+    suspend operator fun invoke(): Flow<List<Course>>
 }

@@ -2,17 +2,20 @@ package com.bagmanovam.thousand_courses.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bagmanovam.thousand_courses.core.domain.onError
+import com.bagmanovam.thousand_courses.core.domain.onSuccess
 import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.RequestCoursesUseCase
+import com.bagmanovam.thousand_courses.domain.useCases.SaveCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SetFavouriteStatusUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SortByPublishDateUseCase
-import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
 import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,6 +23,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val requestCoursesUseCase: RequestCoursesUseCase,
     private val getCoursesUseCase: GetCoursesUseCase,
+    private val saveCoursesUseCase: SaveCoursesUseCase,
     private val sortByPublishDateUseCase: SortByPublishDateUseCase,
     private val setFavouriteStatusUseCase: SetFavouriteStatusUseCase,
 ) : ViewModel() {
@@ -32,13 +36,7 @@ class HomeViewModel(
                 getCoursesUseCase().collect { list ->
                     _uiState.update { state ->
                         state.copy(
-                            isRefreshing = true
-                        )
-                    }
-                    delay(2000) // иммитация длительной операции
-                    _uiState.update { state ->
-                        state.copy(
-                            listCourses = list.courses,
+                            listCourses = list,
                             isRefreshing = false
                         )
                     }
@@ -51,30 +49,48 @@ class HomeViewModel(
             HomeUiState()
         )
 
-    fun onAction(event: HomeEvent) {
+    private val _events = Channel<HomeScreenEvent>()
+    val events = _events.receiveAsFlow()
+
+    fun onAction(event: HomeScreenAction) {
         when (event) {
-            HomeEvent.OnRequest -> {
+            HomeScreenAction.OnRequest -> {
+                _uiState.update { state ->
+                    state.copy(
+                        isRefreshing = true
+                    )
+                }
                 viewModelScope.launch {
                     requestCoursesUseCase()
+                        .onSuccess {
+                            _uiState.update { state ->
+                                state.copy(
+                                    listCourses = it.courses,
+                                    isRefreshing = false
+                                )
+                            }
+                            saveCoursesUseCase(it.courses)
+                        }
+                        .onError {
+                            _events.send(HomeScreenEvent.Error(it))
+                        }
                 }
             }
 
-            HomeEvent.OnSorted -> {
+            HomeScreenAction.OnSorted -> {
                 viewModelScope.launch {
-                    sortByPublishDateUseCase()
-                }
-            }
-
-            is HomeEvent.OnBookMarkClick -> {
-                viewModelScope.launch {
-                    setFavouriteStatusUseCase(event.id)
-                    val list = getCoursesUseCase().first().courses
+                    val courses = sortByPublishDateUseCase().firstOrNull().orEmpty()
                     _uiState.update { state ->
                         state.copy(
-                            listCourses = list,
-                            isRefreshing = false
+                            listCourses = courses,
                         )
                     }
+                }
+            }
+
+            is HomeScreenAction.OnBookMarkClick -> {
+                viewModelScope.launch {
+                    setFavouriteStatusUseCase(event.id)
                 }
             }
         }

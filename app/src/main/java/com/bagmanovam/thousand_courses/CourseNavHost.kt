@@ -41,15 +41,17 @@ fun CourseNavHost(
         composable<Home> {
             val homeViewModel = koinViewModel<HomeViewModel>(viewModelStoreOwner = it)
             val homeState by homeViewModel.uiState.collectAsStateWithLifecycle()
+            val homeEvents = homeViewModel.events
 
             val favouriteViewModel = koinViewModel<FavouriteViewModel>(viewModelStoreOwner = it)
             val favouriteState by favouriteViewModel.uiState.collectAsStateWithLifecycle()
 
             MainScreen(
                 homeState = homeState,
+                events = homeEvents,
                 favouriteState = favouriteState,
                 onHomeActionClick = homeViewModel::onAction,
-                onFavouriteActionClick = favouriteViewModel::onAction
+                onFavouriteActionClick = favouriteViewModel::onAction,
             )
         }
     }

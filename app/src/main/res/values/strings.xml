@@ -17,4 +17,11 @@
     <string name="favourite">Избранное</string>
     <string name="search_courses">Search courses...</string>
     <string name="as_soon_as_possible">Скоро появится</string>
+
+    <string name="request_timeout">Истекло время ожидания ответа.</string>
+    <string name="too_many_requests">Слишком много запросов.</string>
+    <string name="no_internet">Отсутствует интернет соединение.</string>
+    <string name="server_error">Ошибка на стороне сервера.</string>
+    <string name="serialization">Ошибка получения данных.</string>
+    <string name="unknown">Неизвестная ошибка.</string>
 </resources>

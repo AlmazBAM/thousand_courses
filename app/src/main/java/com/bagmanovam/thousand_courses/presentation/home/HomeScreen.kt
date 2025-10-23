@@ -1,5 +1,6 @@
 package com.bagmanovam.thousand_courses.presentation.home
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -32,21 +34,38 @@ import androidx.compose.ui.unit.sp
 import com.bagmanovam.thousand_courses.R
 import com.bagmanovam.thousand_courses.core.presentation.CourseCard
 import com.bagmanovam.thousand_courses.core.presentation.SearchBar
-import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
+import com.bagmanovam.thousand_courses.core.presentation.utils.ObserveAsEvents
+import com.bagmanovam.thousand_courses.core.presentation.utils.toString
 import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
 import com.bagmanovam.thousand_courses.presentation.theme.Green
 import com.bagmanovam.thousand_courses.presentation.theme.Thousand_coursesTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
-    onHomeActionClick: (HomeEvent) -> Unit,
+    onHomeActionClick: (HomeScreenAction) -> Unit,
+    events: Flow<HomeScreenEvent>,
 ) {
     val refreshState = rememberSwipeRefreshState(uiState.isRefreshing)
+
+    val context = LocalContext.current
+    ObserveAsEvents(events = events) { event ->
+        when (event) {
+            is HomeScreenEvent.Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.toString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -71,7 +90,7 @@ fun HomeScreen(
         SwipeRefresh(
             modifier = Modifier.weight(1f),
             state = refreshState,
-            onRefresh = { onHomeActionClick(HomeEvent.OnRequest) }
+            onRefresh = { onHomeActionClick(HomeScreenAction.OnRequest) }
         ) {
 
             LazyColumn(
@@ -86,7 +105,7 @@ fun HomeScreen(
                     ) {
                         Row(
                             modifier = Modifier.clickable {
-                                onHomeActionClick(HomeEvent.OnSorted)
+                                onHomeActionClick(HomeScreenAction.OnSorted)
                             },
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.Bottom
@@ -113,7 +132,13 @@ fun HomeScreen(
                     CourseCard(
                         modifier = Modifier.fillMaxWidth(),
                         course = course,
-                        onBookMarkClick = { onHomeActionClick(HomeEvent.OnBookMarkClick(course.id)) }
+                        onBookMarkClick = {
+                            onHomeActionClick(
+                                HomeScreenAction.OnBookMarkClick(
+                                    course.id
+                                )
+                            )
+                        }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -128,8 +153,9 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     Thousand_coursesTheme {
         HomeScreen(
+            events = flowOf(),
             uiState = HomeUiState(),
-            onHomeActionClick = {}
+            onHomeActionClick = {},
         )
     }
 }

@@ -26,14 +26,16 @@ import com.bagmanovam.thousand_courses.core.presentation.Tab
 import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToIcon
 import com.bagmanovam.thousand_courses.core.presentation.utils.navItemToString
 import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteScreen
-import com.bagmanovam.thousand_courses.presentation.favourite.event.FavouriteEvent
+import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteScreenAction
 import com.bagmanovam.thousand_courses.presentation.favourite.state.FavouriteUiState
 import com.bagmanovam.thousand_courses.presentation.home.HomeScreen
-import com.bagmanovam.thousand_courses.presentation.home.event.HomeEvent
+import com.bagmanovam.thousand_courses.presentation.home.HomeScreenAction
+import com.bagmanovam.thousand_courses.presentation.home.HomeScreenEvent
 import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
 import com.bagmanovam.thousand_courses.presentation.profile.ProfileScreen
 import com.bagmanovam.thousand_courses.presentation.theme.Green
 import com.bagmanovam.thousand_courses.presentation.theme.Grey200
+import kotlinx.coroutines.flow.Flow
 
 
 @Composable
@@ -41,8 +43,9 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     homeState: HomeUiState,
     favouriteState: FavouriteUiState,
-    onHomeActionClick: (HomeEvent) -> Unit,
-    onFavouriteActionClick: (FavouriteEvent) -> Unit,
+    onHomeActionClick: (HomeScreenAction) -> Unit,
+    onFavouriteActionClick: (FavouriteScreenAction) -> Unit,
+    events: Flow<HomeScreenEvent>,
 ) {
     var selected by remember { mutableStateOf(Tab.Home) }
 
@@ -77,8 +80,9 @@ fun MainScreen(
         ) {
             when (selected) {
                 Tab.Home -> HomeScreen(
+                    events = events,
                     uiState = homeState,
-                    onHomeActionClick = onHomeActionClick
+                    onHomeActionClick = onHomeActionClick,
                 )
 
                 Tab.Favourite -> FavouriteScreen(

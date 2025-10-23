@@ -1,12 +1,9 @@
 package com.bagmanovam.thousand_courses.domain.useCases
 
-import com.bagmanovam.thousand_courses.domain.reposittory.CourseRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.bagmanovam.thousand_courses.domain.model.Course
+import kotlinx.coroutines.flow.Flow
 
-class SortByPublishDateUseCase(private val repository: CourseRepository) {
+interface SortByPublishDateUseCase {
 
-    suspend operator fun invoke() = withContext(Dispatchers.IO) {
-        repository.sortByPublishDate()
-    }
+    suspend operator fun invoke(): Flow<List<Course>>
 }

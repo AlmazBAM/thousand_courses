@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bagmanovam.thousand_courses.R
 import com.bagmanovam.thousand_courses.core.presentation.CourseCard
-import com.bagmanovam.thousand_courses.presentation.favourite.event.FavouriteEvent
+import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteScreenAction
 import com.bagmanovam.thousand_courses.presentation.favourite.state.FavouriteUiState
 import com.bagmanovam.thousand_courses.presentation.theme.Thousand_coursesTheme
 
@@ -26,7 +26,7 @@ import com.bagmanovam.thousand_courses.presentation.theme.Thousand_coursesTheme
 fun FavouriteScreen(
     modifier: Modifier = Modifier,
     uiState: FavouriteUiState,
-    onFavouriteActionClick: (FavouriteEvent) -> Unit,
+    onFavouriteActionClick: (FavouriteScreenAction) -> Unit,
 ) {
 
     Column(
@@ -50,7 +50,7 @@ fun FavouriteScreen(
                 CourseCard(
                     modifier = Modifier.fillMaxWidth(),
                     course = course,
-                    onBookMarkClick = { onFavouriteActionClick(FavouriteEvent.OnBookMarkClick(course.id)) }
+                    onBookMarkClick = { onFavouriteActionClick(FavouriteScreenAction.OnBookMarkClick(course.id)) }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

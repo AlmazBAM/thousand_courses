@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bagmanovam.thousand_courses.domain.useCases.GetFavouriteCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SetFavouriteStatusUseCase
-import com.bagmanovam.thousand_courses.presentation.favourite.event.FavouriteEvent
+import com.bagmanovam.thousand_courses.presentation.favourite.FavouriteScreenAction
 import com.bagmanovam.thousand_courses.presentation.favourite.state.FavouriteUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,10 +38,10 @@ class FavouriteViewModel(
             FavouriteUiState()
         )
 
-    fun onAction(event: FavouriteEvent) {
+    fun onAction(event: FavouriteScreenAction) {
         when (event) {
 
-            is FavouriteEvent.OnBookMarkClick -> {
+            is FavouriteScreenAction.OnBookMarkClick -> {
                 viewModelScope.launch {
                     setFavouriteStatusUseCase(event.id)
 //                    val list = getFavouriteCoursesUseCase()
