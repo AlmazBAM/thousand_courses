@@ -6,16 +6,14 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.bagmanovam.thousand_courses.data.db.ThousandCoursesDatabase
 import com.bagmanovam.thousand_courses.data.internet.CourseApi
-import com.bagmanovam.thousand_courses.data.reposittory.CourseApiRepositoryImpl
-import com.bagmanovam.thousand_courses.data.reposittory.CourseDbRepositoryImpl
+import com.bagmanovam.thousand_courses.data.reposittory.CoursesRepositoryImpl
 import com.bagmanovam.thousand_courses.domain.interactor.GetCoursesInteractor
 import com.bagmanovam.thousand_courses.domain.interactor.GetFavouriteCoursesInteractor
 import com.bagmanovam.thousand_courses.domain.interactor.RequestCoursesInteractor
 import com.bagmanovam.thousand_courses.domain.interactor.SaveCoursesInteractor
 import com.bagmanovam.thousand_courses.domain.interactor.SetFavouriteStatusInteractor
 import com.bagmanovam.thousand_courses.domain.interactor.SortByPublishDateInteractor
-import com.bagmanovam.thousand_courses.domain.reposittory.CourseApiRepository
-import com.bagmanovam.thousand_courses.domain.reposittory.CourseDbRepository
+import com.bagmanovam.thousand_courses.domain.reposittory.CoursesRepository
 import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.GetFavouriteCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.RequestCoursesUseCase
@@ -33,8 +31,7 @@ import java.util.concurrent.Executors
 val dataModule = module {
 
 //    single<CourseRepository> { CourseRepositoryImpl(get()) }
-    singleOf(::CourseDbRepositoryImpl).bind<CourseDbRepository>()
-    singleOf(::CourseApiRepositoryImpl).bind<CourseApiRepository>()
+    singleOf(::CoursesRepositoryImpl).bind<CoursesRepository>()
 
 //    single<GetCoursesUseCase> { GetCoursesInteractor(get()) }
     singleOf(::GetCoursesInteractor).bind<GetCoursesUseCase>()

@@ -1,12 +1,12 @@
 package com.bagmanovam.thousand_courses.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bagmanovam.thousand_courses.core.domain.onError
 import com.bagmanovam.thousand_courses.core.domain.onSuccess
 import com.bagmanovam.thousand_courses.domain.useCases.GetCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.RequestCoursesUseCase
-import com.bagmanovam.thousand_courses.domain.useCases.SaveCoursesUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SetFavouriteStatusUseCase
 import com.bagmanovam.thousand_courses.domain.useCases.SortByPublishDateUseCase
 import com.bagmanovam.thousand_courses.presentation.home.state.HomeUiState
@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val requestCoursesUseCase: RequestCoursesUseCase,
     private val getCoursesUseCase: GetCoursesUseCase,
-    private val saveCoursesUseCase: SaveCoursesUseCase,
     private val sortByPublishDateUseCase: SortByPublishDateUseCase,
     private val setFavouriteStatusUseCase: SetFavouriteStatusUseCase,
 ) : ViewModel() {
@@ -34,6 +33,7 @@ class HomeViewModel(
         .onStart {
             viewModelScope.launch {
                 getCoursesUseCase().collect { list ->
+                    Log.e(TAG, "getCoursesUseCase collect: $list ", )
                     _uiState.update { state ->
                         state.copy(
                             listCourses = list,
@@ -65,11 +65,9 @@ class HomeViewModel(
                         .onSuccess {
                             _uiState.update { state ->
                                 state.copy(
-                                    listCourses = it.courses,
                                     isRefreshing = false
                                 )
                             }
-                            saveCoursesUseCase(it.courses)
                         }
                         .onError {
                             _events.send(HomeScreenEvent.Error(it))
